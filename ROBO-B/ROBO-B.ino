@@ -1,9 +1,10 @@
 #include <Wire.h>
 #include <ZumoShield.h>
 
+
 #define LED 13
 #define pingPin 6
-#define pingPin2 3
+#define pingPin2 5
 
 // this might need to be tuned for different lighting conditions, surfaces, etc.
 #define QTR_THRESHOLD  1500 // microseconds
@@ -75,11 +76,13 @@ void loop()
   }
   else
   {
-    if (detect(pingPin)&&detect(pingPin2))
+    bool input=detect(pingPin);
+    bool input2=detect(pingPin);
+    if (input&&input2)
       find(4);
     
-     else if (detect(pingPin)|| detect(pingPin2)){
-      if (detect(pingPin))
+     else if (input|| input2){
+      if (input)
         find(3);
         else find(2);
     }
