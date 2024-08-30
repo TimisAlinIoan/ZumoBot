@@ -1,2 +1,2 @@
-usare il codice SUMO.ino se senza sensori,
-ROBO-B.ino in caso di uso di sue sensori arduino collegati ai pin 6 e 3
+Per il montaggio si svita lo shield di base si monta sompra usando colonnine o viti lo shield stampato attraverso i dori sull'arduino.
+Per i sensori si montano sopra usando il supporto giusto del sensore, per il codice usare SUMO.ino in caso di sensori assenti,ROBO-B.ino in caso di uso dei due sensori, sensore desrta collegato nello slot 6 e quello sinistra nello slot 3.
