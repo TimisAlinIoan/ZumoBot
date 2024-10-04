@@ -1,14 +1,13 @@
 #include <Wire.h>
 #include <ZumoShield.h>
-#include <Servo.h>
+
 
 #define LED 13
 #define pingPin 6
-#define pingPin2 5
-#define crash A1
-#define crash2 A2//da stabilire
-#define servi 4
-#define servi 2
+#define crash 2
+#define crash2 4
+
+
 
 
 #define QTR_THRESHOLD 1500  // microseconds
@@ -19,12 +18,12 @@
 #define FORWARD_SPEED 200
 #define REVERSE_DURATION 200  // ms
 #define TURN_DURATION 300     // ms
-#define CENTER_TIME 500       // ms
+#define FAST_SPEED 400 
 #define SEARCH_SPEED 200
-#define SERVO_ROT 180//da valutare
+#define CENTER_TIME 200
 
-Servo servo1;
-Servo servo2;
+
+
 
 ZumoBuzzer buzzer;
 ZumoMotors motors;
@@ -58,8 +57,8 @@ void setup() {
   waitForButtonAndCountDown();
   pinMode(crash,INPUT);
   pinMode(crash2,INPUT);
-  servo1.attach(4);
-  servo2.attach(2);
+  
+
 }
 
 void loop() {
@@ -78,18 +77,12 @@ void loop() {
   } else if (sensor_values[5] >= QTR_THRESHOLD) {
     turn('L');
   } else {
-    bool direzione = detect(pingPin);
-    bool direzione2 = detect(pingPin2);
-
-    if (direzione && direzione2)
-      find(4);
-
-    else if (direzione || direzione2) {
-      if (direzione)
-        find(3);
-      else find(2);
-    } else if(Crash())
-      elevate();
+   if( detect(pingPin))
+     Retro(1);
+    
+    if (Crash())
+      Retro(-1);
+      
 
       search_mode();
   }
@@ -100,24 +93,8 @@ bool Crash(){
   return false;
 
 };
-void elevate(){
-  servo1.write(SERVO_ROT);
-  servo2.write(SERVO_ROT) ;
-  motors.setSpeeds(FORWARD_SPEED,FORWARD_SPEED);
-  int sensored;
-  int sensores;
-  do{
-    delay(100);
-    sensors.read(sensor_values);
-    sensores=sensor_values[0];
-    sensored=sensor_values[5];
-
-    
-   } while(sensores<=QTR_THRESHOLD&&sensored<=QTR_THRESHOLD);
-  motors.setSpeeds(0,0);
-  servo1.write(0);
-  servo2.write(0);
-
+void Retro(int val){
+    motors.setSpeeds(val*FAST_SPEED,val* FAST_SPEED);
 }
 void turn(char direction) {
   if (direction == 'L') {
@@ -138,14 +115,6 @@ void turn(char direction) {
     motors.setSpeeds(0, 0);
   }
 }
-void find(int sensors_imput) {
-  if (sensors_imput == 4)
-    motors.setSpeeds(FORWARD_SPEED, FORWARD_SPEED);
-  else if (sensors_imput == 3)
-    motors.setSpeeds(FORWARD_SPEED, -FORWARD_SPEED);
-  else
-    motors.setSpeeds(-FORWARD_SPEED, FORWARD_SPEED);
-}
 bool detect(int pingpin) {
   //inserire il codice del sensore giusto//
   long duration, cm;
@@ -165,7 +134,7 @@ bool detect(int pingpin) {
 
 
   cm = microsecondsToCentimeters(duration);
-  if (cm < 70)
+  if (cm < 7)
     return true;
   return false;
 }
