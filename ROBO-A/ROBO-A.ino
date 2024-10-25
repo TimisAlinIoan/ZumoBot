@@ -79,11 +79,9 @@ void loop() {
   } else {
    if( detect(pingPin))
      Retro(1);
-    
-    if (Crash())
+    else if (Crash())
       Retro(-1);
-      
-
+    else
       search_mode();
   }
 }
